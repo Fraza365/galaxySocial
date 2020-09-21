@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         loginBtn = findViewById(R.id.loginBtn);
-        username = findViewById(R.id.registerLink);
+        registerLink = findViewById(R.id.registerLink);
 
         db = new sqlLiteConfig(MainActivity.this);
 
