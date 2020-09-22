@@ -2,6 +2,7 @@ package com.example.basic1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     Button loginBtn;
     TextView registerLink;
     sqlLiteConfig db;
+
 
 
     @Override
@@ -39,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     Toast.makeText(MainActivity.this, "User Created Failed", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        registerLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, Register.class));
             }
         });
 
