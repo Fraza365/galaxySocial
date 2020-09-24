@@ -1,6 +1,7 @@
 package com.example.basic1;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -32,4 +33,18 @@ public class sqlLiteConfig extends SQLiteOpenHelper{
             return false;
         }
     }
+
+    public Cursor selectData(){
+        try{
+            SQLiteDatabase db = getReadableDatabase();
+            Cursor cursor = db.rawQuery("select * from users",null);
+            return cursor;
+        }
+        catch (Exception ex){
+
+            return null;
+        }
+
+    }
+
 }
