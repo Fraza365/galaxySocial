@@ -1,12 +1,16 @@
 package com.example.basic1;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -52,7 +56,31 @@ public class Testing extends AppCompatActivity {
                 }
             }
         });
+
+        registerForContextMenu(tlist);
+
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        new MenuInflater(getApplicationContext()).inflate(R.menu.listmenu,menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getTitle().toString()){
+            case "Edit":
+                Toast.makeText(this, "Edit Clicked !!!", Toast.LENGTH_SHORT).show();
+                break;
+            case "Delete":
+                Toast.makeText(this, "Delete Clicked !!!", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+
     public void getData(){
         Cursor cursor = db.selectData();
         cursor.moveToFirst();
