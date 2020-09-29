@@ -54,6 +54,9 @@ public class Testing extends AppCompatActivity {
                 else{
                     Toast.makeText(Testing.this, "User Created Failed", Toast.LENGTH_SHORT).show();
                 }
+                tuser.setText("");
+                tuser.setText("");
+
             }
         });
 
