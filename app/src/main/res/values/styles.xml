@@ -7,7 +7,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-
         <item name="buttonBarPositiveButtonStyle">@style/Widget.MaterialComponents.Button</item>
         <item name="buttonBarNegativeButtonStyle">@style/Widget.MaterialComponents.Button.TextButton</item>
         <item name="buttonBarNeutralButtonStyle">@style/Widget.MaterialComponents.Button</item>

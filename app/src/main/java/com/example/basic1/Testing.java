@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -29,6 +31,9 @@ public class Testing extends AppCompatActivity {
     Button tbtn;
     ListView tlist;
     sqlLiteConfig db = new sqlLiteConfig(Testing.this);
+    ArrayList<Person> plist = new ArrayList<>();
+    Person currentObj;
+    int currentId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +46,52 @@ public class Testing extends AppCompatActivity {
         tlist = findViewById(R.id.tlist);
 
 
+        if(MainActivity.preferences.getString("username","").isEmpty())
+        {
+            Intent intent = new Intent(Testing.this,MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        Toast.makeText(Testing.this, MainActivity.preferences.getString("username",""), Toast.LENGTH_SHORT).show();
+
+        tlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                currentId = plist.get(position).id;
+                currentObj = new Person(currentId,plist.get(position).username,plist.get(position).password);
+                return false;
+            }
+        });
         getData();
 
         tbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Boolean success = db.insertData(tuser.getText().toString(), tpass.getText().toString());
-                if(success){
-                    Toast.makeText(Testing.this, "User Created", Toast.LENGTH_SHORT).show();
+                if(tbtn.getText().toString().matches("Update"))
+                {
+                    if(db.updateData(currentId,tuser.getText().toString(),tpass.getText().toString()))
+                        Toast.makeText(Testing.this, "User Updated", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(Testing.this, "User Not Updated", Toast.LENGTH_SHORT).show();
+
                     getData();
+                    tbtn.setText("Insert");
                 }
                 else{
-                    Toast.makeText(Testing.this, "User Created Failed", Toast.LENGTH_SHORT).show();
+                    Boolean success = db.insertData(tuser.getText().toString(), tpass.getText().toString());
+                    if(success){
+                        Toast.makeText(Testing.this, "User Created", Toast.LENGTH_SHORT).show();
+                        getData();
+                    }
+                    else{
+                        Toast.makeText(Testing.this, "User Created Failed", Toast.LENGTH_SHORT).show();
+                    }
                 }
+
                 tuser.setText("");
-                tuser.setText("");
+                tpass.setText("");
 
             }
         });
@@ -74,10 +110,17 @@ public class Testing extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getTitle().toString()){
             case "Edit":
-                Toast.makeText(this, "Edit Clicked !!!", Toast.LENGTH_SHORT).show();
+                tuser.setText(currentObj.username);
+                tpass.setText(currentObj.password);
+                tbtn.setText("Update");
                 break;
             case "Delete":
-                Toast.makeText(this, "Delete Clicked !!!", Toast.LENGTH_SHORT).show();
+                if(db.deleteData(currentId))
+                    Toast.makeText(this, "User deleted", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(this, "User Not deleted", Toast.LENGTH_SHORT).show();
+
+                getData();
                 break;
         }
         return super.onContextItemSelected(item);
@@ -88,20 +131,22 @@ public class Testing extends AppCompatActivity {
         Cursor cursor = db.selectData();
         cursor.moveToFirst();
         ArrayList list = new ArrayList();
+        plist.clear();
+        list.clear();
         while (!cursor.isAfterLast()){
-//            list.add("id : " + cursor.getInt(0) + ", username : " + cursor.getString(1)+ ", password : " + cursor.getString(2));
+            plist.add(new Person(cursor.getInt(0) ,cursor.getString(1),cursor.getString(2)));
             list.add(cursor.getString(1));
             cursor.moveToNext();
         }
-//        ArrayAdapter adapter = new ArrayAdapter(Testing.this,android.R.layout.simple_list_item_1,list);
-        CustomAdapter adapter = new CustomAdapter(Testing.this, list);
+//        ArrayAdapter adapter = new ArrayAdapter(Testing.this,android.R.layout.simple_list_item_1,plist);
+        CustomAdapter adapter = new CustomAdapter(Testing.this, plist);
         tlist.setAdapter(adapter);
     }
 }
 class CustomAdapter extends BaseAdapter{
 
     Context context;
-    ArrayList data;
+    ArrayList<Person> data;
 
     public CustomAdapter(Context context, ArrayList data) {
         this.context = context;
@@ -127,8 +172,45 @@ class CustomAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context).inflate(R.layout.testinglistitem, null);
         TextView username = convertView.findViewById(R.id.username);
-        username.setText(data.get(position).toString());
-
+        TextView password = convertView.findViewById(R.id.password);
+        Log.d("testData", data.get(position).username);
+        username.append(data.get(position).username);
+        password.append(data.get(position).password);
         return convertView;
+    }
+}
+
+class Person {
+    int id;
+    String username,password;
+
+    public Person(int id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-public class sqlLiteConfig extends SQLiteOpenHelper{
+public class sqlLiteConfig extends SQLiteOpenHelper {
     public sqlLiteConfig(@Nullable Context context) {
         super(context, "galaxydb", null, 1);
     }
@@ -24,27 +24,61 @@ public class sqlLiteConfig extends SQLiteOpenHelper{
 
 
     public boolean insertData(String userName, String password) {
-        try{
+        try {
             SQLiteDatabase db = getWritableDatabase();
-            db.execSQL("insert into users(id, username, password) values (null, '"+userName+"', '"+ password+"')");
+            db.execSQL("insert into users(id, username, password) values (null, '" + userName + "', '" + password + "')");
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public Cursor selectData() {
+        try {
+            SQLiteDatabase db = getReadableDatabase();
+            Cursor cursor = db.rawQuery("select * from users", null);
+            return cursor;
+        } catch (Exception ex) {
+
+            return null;
+        }
+
+    }
+
+    public boolean updateData(int id, String username, String password) {
+        SQLiteDatabase db = getWritableDatabase();
+        try{
+            db.execSQL("update users set username = '"+username+"', password = '"+password+"' where id = "+id+"");
             return true;
         }
         catch (Exception ex){
             return false;
         }
+
     }
 
-    public Cursor selectData(){
+    public boolean deleteData(int id) {
+        SQLiteDatabase db = getWritableDatabase();
         try{
-            SQLiteDatabase db = getReadableDatabase();
-            Cursor cursor = db.rawQuery("select * from users",null);
-            return cursor;
+            db.execSQL("delete from users where id = "+id+"");
+            return true;
         }
         catch (Exception ex){
-
-            return null;
+            return false;
         }
 
+    }
+
+    public Cursor Login(String userName, String password) {
+
+            SQLiteDatabase db = getReadableDatabase();
+            Cursor cursor = db.rawQuery("select * from users where username = '" + userName + "' and password = '" + password + "'",null);
+          if(cursor.getCount() <= 0){
+              return null;
+          }
+          else{
+              return cursor;
+          }
     }
 
 }
