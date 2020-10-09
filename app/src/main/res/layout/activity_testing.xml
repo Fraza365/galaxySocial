@@ -9,6 +9,7 @@
     android:padding="20dp"
     >
 
+
     <EditText
         android:id="@+id/tuser"
         android:layout_width="match_parent"
@@ -28,10 +29,35 @@
         android:text="Insert"
 
         />
+
+
     <ListView
         android:id="@+id/tlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
     </ListView>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Main content -->
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/logoutBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            app:icon="@drawable/exiticon"
+            android:textColor="#ffffff"
+            app:iconTint="#ffffff"
+            android:text="Logout"
+            tools:ignore="VectorDrawableCompat"
+            app:backgroundTint="@color/colorPrimary"
+            />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>

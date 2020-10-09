@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class Testing extends AppCompatActivity {
 
     EditText tuser,tpass;
-    Button tbtn;
+    Button tbtn,logoutBtn;
     ListView tlist;
     sqlLiteConfig db = new sqlLiteConfig(Testing.this);
     ArrayList<Person> plist = new ArrayList<>();
@@ -43,6 +43,7 @@ public class Testing extends AppCompatActivity {
         tuser = findViewById(R.id.tuser);
         tpass = findViewById(R.id.tpass);
         tbtn = findViewById(R.id.tbtn);
+        logoutBtn = findViewById(R.id.logoutBtn);
         tlist = findViewById(R.id.tlist);
 
 
@@ -53,7 +54,18 @@ public class Testing extends AppCompatActivity {
             finish();
         }
 
-        Toast.makeText(Testing.this, MainActivity.preferences.getString("username",""), Toast.LENGTH_SHORT).show();
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.editor.putString("username", "");
+                MainActivity.editor.commit();
+
+                Intent intent = new Intent(Testing.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        Toast.makeText(Testing.this, "Welcome " + MainActivity.preferences.getString("username",""), Toast.LENGTH_SHORT).show();
 
         tlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
