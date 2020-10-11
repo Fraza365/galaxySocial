@@ -92,14 +92,7 @@ public class Testing extends AppCompatActivity {
                     tbtn.setText("Insert");
                 }
                 else{
-                    Boolean success = db.insertData(tuser.getText().toString(), tpass.getText().toString());
-                    if(success){
-                        Toast.makeText(Testing.this, "User Created", Toast.LENGTH_SHORT).show();
-                        getData();
-                    }
-                    else{
-                        Toast.makeText(Testing.this, "User Created Failed", Toast.LENGTH_SHORT).show();
-                    }
+
                 }
 
                 tuser.setText("");

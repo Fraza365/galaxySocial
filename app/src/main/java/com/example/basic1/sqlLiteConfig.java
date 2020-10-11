@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -14,7 +15,7 @@ public class sqlLiteConfig extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table users(id Integer Primary Key, username varchar(50), password varchar(50))");
+        db.execSQL("create table users(id Integer Primary Key, fullname varchar(50), dob varchar(50), gender varchar(50), username varchar(50), email varchar(50), password varchar(50))");
     }
 
     @Override
@@ -23,12 +24,13 @@ public class sqlLiteConfig extends SQLiteOpenHelper {
     }
 
 
-    public boolean insertData(String userName, String password) {
+    public boolean insertData(String userName, String password, String name, String dob, String gender, String email) {
         try {
             SQLiteDatabase db = getWritableDatabase();
-            db.execSQL("insert into users(id, username, password) values (null, '" + userName + "', '" + password + "')");
+            db.execSQL("insert into users(id, fullname, dob, gender, username, email, password) values (null, '" + name + "', '" + dob + "', '" + gender + "', '" + userName + "', '" + email + "', '" + password + "')");
             return true;
         } catch (Exception ex) {
+            Log.d("sqlerror", ex.toString());
             return false;
         }
     }

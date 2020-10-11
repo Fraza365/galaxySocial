@@ -12,7 +12,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.Calendar;
 
 import static android.graphics.Color.colorSpace;
@@ -20,15 +23,40 @@ import static android.graphics.Color.rgb;
 
 public class Register extends AppCompatActivity {
 
-    TextView dob, loginLink ;
+    TextView name,username,dob,email,password,loginLink ;
+    Button registerBtn;
     DatePickerDialog.OnDateSetListener DateSetListener;
+    String gender = "Male";
+    sqlLiteConfig db = new sqlLiteConfig(Register.this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        loginLink= findViewById(R.id.loginLink);
+        name = findViewById(R.id.name);
+        username = findViewById(R.id.username);
         dob = findViewById(R.id.dob);
+        password = findViewById(R.id.password);
+        email = findViewById(R.id.email);
+
+        loginLink= findViewById(R.id.loginLink);
+        registerBtn = findViewById(R.id.registerBtn);
+
+        registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean a = db.insertData(username.getText().toString(),password.getText().toString(),name.getText().toString(),dob.getText().toString(),gender,email.getText().toString());
+                if(a){
+                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else{
+                    Toast.makeText(Register.this, "Something is wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         dob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,6 +85,24 @@ public class Register extends AppCompatActivity {
                 startActivity(new Intent(Register.this, MainActivity.class));
             }
         });
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.male:
+                if (checked)
+                    gender="male";
+                    break;
+            case R.id.female:
+                if (checked)
+                    gender="female";
+                    break;
+        }
+
     }
 }
 
